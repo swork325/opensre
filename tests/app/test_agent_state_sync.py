@@ -19,8 +19,6 @@ def _pydantic_keys(model: type) -> set[str]:
     """Return all field names from a Pydantic model, resolving aliases back to field names."""
     keys: set[str] = set()
     for name, field_info in model.model_fields.items():
-        # If a field has an alias (e.g. alias="_auth_token"), use the alias as the
-        # canonical key because that is what AgentState declares.
         alias = field_info.alias
         keys.add(alias if alias is not None else name)
     return keys
