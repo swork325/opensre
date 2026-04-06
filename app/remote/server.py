@@ -170,13 +170,16 @@ _SAFE_INV_ID = re.compile(r"[\w\-]+")
 def _safe_investigation_path(inv_id: str) -> Path:
     """Resolve an investigation file path with path-traversal protection.
 
-    Rejects any ID that contains characters outside ``[\\w-]`` so the
-    constructed filename is guaranteed to stay inside INVESTIGATIONS_DIR.
+    Rejects any ID that contains characters outside ``[\\w-]`` and verifies
+    the resolved path stays inside INVESTIGATIONS_DIR.
     """
     if not _SAFE_INV_ID.fullmatch(inv_id):
         raise HTTPException(status_code=400, detail="Invalid investigation ID")
     filename = f"{inv_id}.md"
-    return INVESTIGATIONS_DIR / filename
+    resolved = (INVESTIGATIONS_DIR / filename).resolve()
+    if not resolved.is_relative_to(INVESTIGATIONS_DIR.resolve()):
+        raise HTTPException(status_code=400, detail="Invalid investigation ID")
+    return resolved
 
 
 def _slugify(text: str) -> str:
