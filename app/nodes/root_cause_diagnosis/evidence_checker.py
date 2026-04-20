@@ -23,6 +23,7 @@ _INVESTIGATED_EVIDENCE_KEYS = frozenset({
     "cloudwatch_logs",
     "datadog_logs",
     "datadog_monitors",
+    "betterstack_logs",
     # Kubernetes / EKS evidence keys — written by the _map_eks_* mappers in
     # app/nodes/investigate/processing/post_process.py.  Without these, a pure
     # Kubernetes healthy investigation never satisfies the evidence gate below
@@ -63,6 +64,7 @@ def check_evidence_availability(
         or evidence.get("datadog_logs") is not None
         or evidence.get("datadog_monitors") is not None
         or evidence.get("datadog_events") is not None
+        or evidence.get("betterstack_logs") is not None
         or evidence.get("s3_object", {}).get("found")
         or evidence.get("s3_audit_payload", {}).get("found")
         or evidence.get("s3_marker") is not None

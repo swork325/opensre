@@ -20,6 +20,7 @@ def _has_any_logs(evidence: dict[str, Any]) -> bool:
         or evidence.get("datadog_logs")
         or evidence.get("datadog_error_logs")
         or evidence.get("cloudwatch_logs")
+        or evidence.get("betterstack_logs")
     )
 
 
@@ -171,6 +172,13 @@ def extract_evidence_sources(claim: str, evidence: dict[str, Any]) -> list[str]:
         evidence.get("grafana_logs") or evidence.get("grafana_error_logs")
     ):
         sources.append("grafana_logs")
+    if (
+        "log" in claim_lower
+        or "error" in claim_lower
+        or "betterstack" in claim_lower
+        or "better stack" in claim_lower
+    ) and evidence.get("betterstack_logs"):
+        sources.append("betterstack_logs")
     if ("trace" in claim_lower or "span" in claim_lower or "pipeline" in claim_lower) and evidence.get("grafana_pipeline_spans"):
         sources.append("grafana_traces")
     if ("metric" in claim_lower or "rate" in claim_lower or "count" in claim_lower) and evidence.get("grafana_metrics"):
