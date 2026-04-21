@@ -93,9 +93,9 @@ class BaseTool(ABC):
         try:
             params = self.extract_params(**kwargs)
         except ValueError as exc:
-            return ToolResult(success=False, error=f"Invalid params: {exc}")
+            return ToolResult(success=False, error=f"Invalid parameters: {exc}")
 
-        return self.run(params)
-
-    def __repr__(self) -> str:
-        return f"<Tool name={self.my_tool_name!r} display={self.MyToolName!r}>"
+        try:
+            return self.run(params)
+        except Exception as exc:  # noqa: BLE001 – catch-all so callers always get a ToolResult
+            return ToolResult(success=False, error=f"Unexpected error during '{self.my_tool_name}': {exc}")
