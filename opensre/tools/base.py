@@ -97,5 +97,5 @@ class BaseTool(ABC):
 
         try:
             return self.run(params)
-        except Exception as exc:  # noqa: BLE001 – surface unexpected errors as ToolResult
+        except Exception as exc:  # noqa: BLE001 – catch-all so callers always get a ToolResult
             return ToolResult(success=False, error=f"Unexpected error in '{self.my_tool_name}': {exc}")
