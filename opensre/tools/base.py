@@ -95,7 +95,6 @@ class BaseTool(ABC):
         except ValueError as exc:
             return ToolResult(success=False, error=f"Invalid parameters: {exc}")
 
-        try:
-            return self.run(params)
-        except Exception as exc:  # noqa: BLE001 – catch-all so callers always get a ToolResult
-            return ToolResult(success=False, error=f"Unexpected error in '{self.my_tool_name}': {exc}")
+        # NOTE: letting unexpected exceptions bubble up rather than silently
+        # swallowing them — makes debugging tool implementations much easier.
+        return self.run(params)
